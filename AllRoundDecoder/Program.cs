@@ -11,11 +11,22 @@ namespace AllRoundDecoder
         public static string inputText;
         public static void Main(string[] args)
         {
+            Program p = new Program();
+            p.StartingLines();
+            p.Brain();
+        }
+
+        private void StartingLines()
+        {
             Console.WriteLine("Welcome to decipher bot.");
             Console.Write("Please input a text: ");
             inputText = Console.ReadLine();
             Console.WriteLine(inputText);
-            Console.ReadKey();
+        }
+
+        private void Brain()
+        {
+
         }
     }
 }
