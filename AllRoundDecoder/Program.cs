@@ -8,18 +8,13 @@ namespace AllRoundDecoder
 {
     public class Program
     {
+        public static string inputText;
         public static void Main(string[] args)
-        {
-            string inputText = "";
-            IntroText(inputText);
-        }
-
-        private static void IntroText(string code)
         {
             Console.WriteLine("Welcome to decipher bot.");
             Console.Write("Please input a text: ");
-            code = Console.ReadLine();
-            Console.WriteLine(code);
+            inputText = Console.ReadLine();
+            Console.WriteLine(inputText);
             Console.ReadKey();
         }
     }
