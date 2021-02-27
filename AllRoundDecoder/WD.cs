@@ -8,42 +8,59 @@ namespace AllRoundDecoder
 {
     public class WD
     {
-        public static int permutations = 0;
-        public static int correctPermutations = 0, xCount;
-        public static List<string> correctWordList = new List<string>();
+        private static int permutations = 0;
+        private static int correctPermutations = 0, xCount = 0;
+        private static List<string> correctWordList = new List<string>();
 
-        public static DateTime timeStarted;
+        private static DateTime timeStarted;
 
-        public static Microsoft.Office.Interop.Word.Application appWord =
+        private static Microsoft.Office.Interop.Word.Application appWord =
                     new Microsoft.Office.Interop.Word.Application();
-        public static double timeRemainder;
 
-        public static void WDInitialization(string word)
+        private static double timeRemainder;
+
+        public static void WDInitialization(string word,string option)
         {
-            List<string> temp = new List<string>();
-
-            temp = word.Split(' ').ToList();
-
-            timeStarted = DateTime.Now;
-
-            for (int i = 0; i < temp.Count; i++)
+            switch (option)
             {
-                int max = temp[i].Length;
-                xCount = 0;
-                Console.Clear();
-                WDProcess("", 0, temp[i], max);
+                case "s":
+                    {
+                        timeStarted = DateTime.Now;
+                        WDStrict.WDStrictInitialization(word.ToCharArray(), 0, word.Length);
+                    }
+                    break;
+                case "a":
+                    {
+                        timeStarted = DateTime.Now;
+                        WDProcessAbsolute("", 0, word, word.Length);
+                    }
+                    break;
+                default:
+                    break;
             }
+            //List<string> temp = new List<string>();
 
-            appWord.Quit();
+            //temp = word.Split(' ').ToList();
+
+            //timeStarted = DateTime.Now;
+
+            //for (int i = 0; i < temp.Count; i++)
+            //{
+            //    int max = temp[i].Length;
+            //    xCount = 0;
+            //    WDProcessAbsolute("", 0, temp[i], max);
+            //}
+
+            //appWord.Quit();
         }
-        private static void WDProcess(string prefix, int level, string ValidChars, int max)
+        private static void WDProcessAbsolute(string prefix, int level, string ValidChars, int max)
         {
             level += 1;
             foreach (char c in ValidChars)
             {
                 if (level < max)
                 {
-                    WDProcess(prefix + c, level, ValidChars, max);
+                    WDProcessAbsolute(prefix + c, level, ValidChars, max);
                 }
                 if ((prefix + c).Length == max)
                 {
@@ -53,7 +70,7 @@ namespace AllRoundDecoder
                         if (!correctWordList.Contains(prefix + c))
                         {
                             correctWordList.Add(prefix + c);
-                            DisplayWordDescrambler(max);
+                            DWDAbsolute(max);
                         }
                         correctPermutations++;
                     }
@@ -64,24 +81,27 @@ namespace AllRoundDecoder
                             timeRemainder = DateTime.Now.Subtract(timeStarted).TotalSeconds;
                         }
                         xCount += 1000;
-                        DisplayWordDescrambler(max);
+                        DWDAbsolute(max);
                     }
                 }
             }
         }
-        private static void DisplayWordDescrambler(int max)
+        private static void DWDAbsolute(int max)
         {
             Console.Clear();
-            Console.WriteLine("Word descrambler initialized. \n" + "Starting time - {0}", timeStarted.ToString());
+            if (max == 0)
+                Console.WriteLine("Finished!..");
+            else
+                Console.WriteLine("Word Descrambler Strict initialized... \n" + "Starting time - {0}", timeStarted.ToString());
             Console.WriteLine("Time passed: {0}s", DateTime.Now.Subtract(timeStarted).TotalSeconds);
-            Console.WriteLine("Time remaining: {0}", CalculateRemainingTime(max));
-            Console.WriteLine("\nBe patient!\n" + "\nCorrect permutations: " + $"{correctPermutations}\n" + "Permutation Count: " + $"{permutations}\n" + "\nWords created:");
+            Console.WriteLine("Time remaining: {0}", CRTAbsolute(max));
+            Console.WriteLine("\nBe patient!\n" + "\nCorrect permutations: " + $"{correctPermutations}\n" + "Total Permutation Count: " + $"{permutations}\n" + "\nWords created:");
             foreach (var item in correctWordList)
             {
                 Console.WriteLine(item);
             }
         }
-        private static string CalculateRemainingTime(int integer)
+        private static string CRTAbsolute(int integer)
         {
             string remaining = "{0}h:{0}m:{0}s:{0}ms";
             double temp;

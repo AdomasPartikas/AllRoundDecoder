@@ -23,6 +23,7 @@ namespace AllRoundDecoder
 
             InitializeDictionary();
             StringBuilder output = new StringBuilder();
+
             foreach (string item in c)
             {
                 if (_morseAlphabet.ContainsKey(item))
